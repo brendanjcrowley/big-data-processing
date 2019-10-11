@@ -37,16 +37,17 @@ def process_line(line):
 # FUNCTION ex1
 # ------------------------------------------
 def ex1(sc, my_dataset_dir):
-    pass
 
     # 1. We load the dataset into an inputRDD
+    inputRDD = sc.textFile(my_dataset_dir)
 
 
     # 2. We count the total amount of entries
+    total_entries = inputRDD.count()
 
 
     # 3. We print the result
-
+    print(total_entries)
 
 
 # ------------------------------------------
@@ -56,7 +57,7 @@ def ex2(sc, my_dataset_dir):
     pass
 
     # 1. We load the dataset into an inputRDD
-
+    inputRDD = sc.textFile(my_dataset_dir)
 
     # 2. We process each line to get the relevant info
 
@@ -189,10 +190,10 @@ if __name__ == '__main__':
     local_False_databricks_True = False
 
     # 3. We set the path to my_dataset and my_result
-    my_local_path = "/home/nacho/CIT/Tools/MyCode/Spark/"
+    my_local_path = "/home/local/STUDENT-CIT/r00140363/git/big-data-processing"
     my_databricks_path = "/"
 
-    my_dataset_dir = "FileStore/tables/7_Assignments/A01/my_dataset/"
+    my_dataset_dir = "/Assignment 1/my_dataset/"
 
     if local_False_databricks_True == False:
         my_dataset_dir = my_local_path + my_dataset_dir
