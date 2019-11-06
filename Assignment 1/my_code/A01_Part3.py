@@ -36,10 +36,10 @@ def ex1(spark, my_dataset_dir):
         .load(my_dataset_dir)
 
     # 3. Operation A1: We count the number of entries in inputDF
+    totalEntries = inputDF.count()
 
     # 4. We print the result
-
-    pass
+    print(totalEntries)
 
 # ------------------------------------------
 # FUNCTION ex2
@@ -65,12 +65,13 @@ def ex2(spark, my_dataset_dir):
         .load(my_dataset_dir)
 
     # 3. Operation T2: We group the information by the name of the station
+    groupByStations = inputDF.groupBy("name").distinct()
 
     # 4. Operation A1: We count the amount of rows in infoDF
+    stationList = groupByStations
 
     # 5. We print the result
-
-    pass
+    print(stationList)
 
 # ------------------------------------------
 # FUNCTION ex3
@@ -164,6 +165,7 @@ def ex5(spark, my_dataset_dir):
         .load(my_dataset_dir)
 
     # 3. Operation T2: We filter the bikes of "Kent Station"
+    kentStationOnly = inputDF.filter(inputDF["name"]=="Kent Station")
 
     # 4. Operation T3: We project just the info we are interested into
 
@@ -209,16 +211,17 @@ def my_main(spark, my_dataset_dir, option):
 # ---------------------------------------------------------------
 if __name__ == '__main__':
     # 1. We use as many input arguments as needed
-    option = 1
+    option = 2
 
     # 2. Local or Databricks
-    local_False_databricks_True = True
+    local_False_databricks_True = False
 
     # 3. We set the path to my_dataset and my_result
-    my_local_path = "/home/nacho/CIT/Tools/MyCode/Spark/"
+    my_local_path = "/home/local/STUDENT-CIT/r00140363/git/big-data-processing"
     my_databricks_path = "/"
 
-    my_dataset_dir = "FileStore/tables/7_Assignments/A01/my_dataset/"
+    my_dataset_dir = "/Assignment 1/my_dataset/"
+
 
     if local_False_databricks_True == False:
         my_dataset_dir = my_local_path + my_dataset_dir

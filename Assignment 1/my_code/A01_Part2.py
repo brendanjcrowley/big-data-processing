@@ -71,8 +71,24 @@ def ex1(sc, my_dataset_dir):
 # FUNCTION ex2
 # ------------------------------------------
 def ex2(sc, my_dataset_dir):
-    pass
+    inputRDD = sc.textFile(my_dataset_dir)
 
+    transformedRDD = inputRDD.map(lambda x: process_line(x))
+
+    only280817 = transformedRDD.filter(lambda x: "28-08-2017" in x[4])
+
+    timePeriods = only280817.map(lambda x: (str(x[1] + " " + (x[4][11] + x[4][12])), x[5]))
+    
+    aggregatedTimePeriods = timePeriods.reduceByKey(lambda x, y: x+y)
+
+    averagePerTimePeriod = aggregatedTimePeriods.map(lambda x: (x[0], (x[1]/12)))
+    averagePerTimePeriod = averagePerTimePeriod.sortBy(lambda x: x[0])
+
+    resVal = averagePerTimePeriod.collect()
+
+    for item in resVal:
+        print(item)
+    
 # ------------------------------------------
 # FUNCTION ex3
 # ------------------------------------------
@@ -129,7 +145,7 @@ def my_main(sc, my_dataset_dir, option, ran_out_times):
 # ---------------------------------------------------------------
 if __name__ == '__main__':
     # 1. We use as many input arguments as needed
-    option = 1
+    option = 2
 
     ran_out_times = ['06:03:00', '06:03:00', '08:58:00', '09:28:00', '10:58:00', '12:18:00',
                      '12:43:00', '12:43:00', '13:03:00', '13:53:00', '14:28:00', '14:28:00',
