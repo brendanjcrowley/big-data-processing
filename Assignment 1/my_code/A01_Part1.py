@@ -37,41 +37,41 @@ def process_line(line):
 # FUNCTION ex1
 # ------------------------------------------
 def ex1(sc, my_dataset_dir):
-    pass
 
     # 1. We load the dataset into an inputRDD
+    inputRDD = sc.textFile(my_dataset_dir)
 
 
     # 2. We count the total amount of entries
+    total_entries = inputRDD.count()
 
 
     # 3. We print the result
-
+    print(total_entries)
 
 
 # ------------------------------------------
 # FUNCTION ex2
 # ------------------------------------------
 def ex2(sc, my_dataset_dir):
-    pass
 
     # 1. We load the dataset into an inputRDD
-
+    inputRDD = sc.textFile(my_dataset_dir)
 
     # 2. We process each line to get the relevant info
-
+    transformedRDD = inputRDD.map(lambda x: process_line(x))
 
     # 3. We project just the info we are interested into
-
+    bikeStations = transformedRDD.map(lambda x: x[1])
 
     # 4. We get just the entries that are different
-
+    bikeStationsUnique = bikeStations.distinct()
 
     # 5. We count such these entries
-
+    totalBikeStations = bikeStationsUnique.count()
 
     # 6. We print the result
-
+    print(totalBikeStations)
 
 
 # ------------------------------------------
@@ -81,23 +81,23 @@ def ex3(sc, my_dataset_dir):
     pass
 
     # 1. We load the dataset into an inputRDD
-
+    inputRDD = sc.textFile(my_dataset_dir)
 
     # 2. We process each line to get the relevant info
-
+    transformedRDD = inputRDD.map(lambda x: process_line(x))
 
     # 3. We project just the info we are interested into
-
+    bikeStations = transformedRDD.map(lambda x: x[1])
 
     # 4. We get just the entries that are different
-
+    bikeStationsUnique = bikeStations.distinct()
 
     # 5. We collect such these entries
-
+    resVal = bikeStationsUnique.collect()
 
     # 6. We print them
-
-
+    for item in resVal:
+        print(item)
 
 # ------------------------------------------
 # FUNCTION ex4
@@ -106,24 +106,29 @@ def ex4(sc, my_dataset_dir):
     pass
 
     # 1. We load the dataset into an inputRDD
-
+    inputRDD = sc.textFile(my_dataset_dir)
 
     # 2. We process each line to get the relevant info
-
+    transformedRDD = inputRDD.map(lambda x: process_line(x))
 
     # 3. We project just the info we are interested into
-
+    stationsWithLatitude = transformedRDD.map(lambda x: (x[1], float(x[2])))
 
     # 4. We get just the entries that are different
-
+    bikeStationsUnique = stationsWithLatitude.distinct()
+    print(bikeStationsUnique.take(5))
 
     # 5. We sort them by their longitude
+    sortedByLatitude = bikeStationsUnique.sortBy(lambda x: x[1], ascending=False)
 
 
     # 6. We collect such these entries
+    resVal = sortedByLatitude.collect()
 
 
     # 7. We print them
+    for item in resVal:
+        print(item)
 
 
 # ------------------------------------------
@@ -133,21 +138,30 @@ def ex5(sc, my_dataset_dir):
     pass
 
     # 1. We load the dataset into an inputRDD
-
+    inputRDD = sc.textFile(my_dataset_dir)
 
     # 2. We process each line to get the relevant info
-
+    transformedRDD = inputRDD.map(lambda x: process_line(x))
 
     # 3. We filter the bikes of "Kent Station"
+    kentStationOnly = transformedRDD.filter(lambda x: x[1] == "Kent Station")
+    print(kentStationOnly.take(5))
 
 
     # 4. We project just the info we are interested into
-
+    sumOfBikes = kentStationOnly.map(lambda x: int(x[5]))
+    print(sumOfBikes.take(5))
 
     # 5. We compute the average amount of bikes
+    totalBikes = sumOfBikes.sum()
+    totalItems = sumOfBikes.count()
+    averageBikes = totalBikes / totalItems
 
 
     # 6. We print this info by the screen
+    print("Total bikes =", totalBikes)
+    print("Total instances =", totalItems)
+    print("Average bikes =", averageBikes)
 
 
 # ------------------------------------------
@@ -183,16 +197,16 @@ def my_main(sc, my_dataset_dir, option):
 # ---------------------------------------------------------------
 if __name__ == '__main__':
     # 1. We use as many input arguments as needed
-    option = 1
+    option = 5
 
     # 2. Local or Databricks
     local_False_databricks_True = False
 
     # 3. We set the path to my_dataset and my_result
-    my_local_path = "/home/nacho/CIT/Tools/MyCode/Spark/"
+    my_local_path = "/home/local/STUDENT-CIT/r00140363/git/big-data-processing"
     my_databricks_path = "/"
 
-    my_dataset_dir = "FileStore/tables/7_Assignments/A01/my_dataset/"
+    my_dataset_dir = "/Assignment 1/my_dataset/"
 
     if local_False_databricks_True == False:
         my_dataset_dir = my_local_path + my_dataset_dir
